@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran dan Daftar Driver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+        .form-container, .driver-list {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        form {
+            display: grid;
+            gap: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #driver-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .driver-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .driver-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .driver-photo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .driver-info {
+            margin-bottom: 10px;
+        }
+        .chat-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .chat-button:hover {
+            background-color: #128C7E;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            #driver-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pendaftaran dan Daftar Driver</h1>
+    </header>
+    <div class="container">
+        <div class="driver-list">
+            <h2>Daftar Driver</h2>
+            <div id="driver-container"></div>
+        </div>
+        <div class="form-container">
+            <h2>Pendaftaran Driver</h2>
+            <form id="driver-form">
+                <input type="text" id="nama" placeholder="Nama" required>
+                <select id="jenis-kendaraan" required>
+                    <option value="">Pilih Jenis Kendaraan</option>
+                    <option value="Motor">Motor</option>
+                    <option value="Mobil">Mobil</option>
+                </select>
+                <input type="text" id="plat-nomor" placeholder="Plat Nomor" required>
+                <input type="text" id="rute" placeholder="Rute" required>
+                <input type="tel" id="nomor-wa" placeholder="Nomor WhatsApp(+6282322334422)" required>
+                <input type="file" id="foto" accept="image/*" required>
+                <button type="submit">Daftar</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Fungsi untuk menyimpan data ke localStorage
+        function saveDrivers(drivers) {
+            localStorage.setItem('drivers', JSON.stringify(drivers));
+        }
+
+        // Fungsi untuk mengambil data dari localStorage
+        function getDrivers() {
+            const drivers = localStorage.getItem('drivers');
+            return drivers ? JSON.parse(drivers) : [];
+        }
+
+        // Fungsi untuk menampilkan driver
+        function displayDrivers() {
+            const drivers = getDrivers();
+            const container = document.getElementById('driver-container');
+            container.innerHTML = '';
+            drivers.forEach(driver => {
+                const driverCard = document.createElement('div');
+                driverCard.className = 'driver-card';
+                driverCard.innerHTML = `
+                    <img src="${driver.foto}" alt="${driver.nama}" class="driver-photo">
+                    <div class="driver-info">
+                        <h3>${driver.nama}</h3>
+                        <p>${driver.jenisKendaraan} - ${driver.platNomor}</p>
+                        <p>Rute: ${driver.rute}</p>
+                    </div>
+                    <a href="https://wa.me/${driver.nomorWa}" class="chat-button" target="_blank">Chat via WhatsApp</a>
+                `;
+                container.appendChild(driverCard);
+            });
+        }
+
+        // Event listener untuk form submission
+        document.getElementById('driver-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nama = document.getElementById('nama').value;
+            const jenisKendaraan = document.getElementById('jenis-kendaraan').value;
+            const platNomor = document.getElementById('plat-nomor').value;
+            const rute = document.getElementById('rute').value;
+            const nomorWa = document.getElementById('nomor-wa').value;
+            const fotoFile = document.getElementById('foto').files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const drivers = getDrivers();
+                drivers.push({
+                    nama,
+                    jenisKendaraan,
+                    platNomor,
+                    rute,
+                    nomorWa,
+                    foto: event.target.result
+                });
+                saveDrivers(drivers);
+                displayDrivers();
+                e.target.reset();
+            };
+            reader.readAsDataURL(fotoFile);
+        });
+
+        // Menampilkan driver saat halaman dimuat
+        displayDrivers();
+    </script>
+</body>
+</html>

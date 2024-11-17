@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiServ - Layanan Multi Guna</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-size: 2.5em;
+        }
+
+        .services {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 40px;
+        }
+
+        .service-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            width: calc(33.333% - 30px);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            font-size: 64px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .service-description {
+            font-size: 16px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .service-card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .service-card {
+                width: 100%;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="iwip.png" alt="go-IWIP" class="logo">
+          <h1>temukan kemudahan dalam mencari taxi, makanan dan rumah kost anda disini</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="services">
+            <div class="service-card">
+                <div class="service-icon">🚗</div>
+                <h2 class="service-title">Antar Jemput</h2>
+                <p class="service-description">Perjalanan aman dan nyaman dengan driver terpercaya.</p>
+                <a href="motor.html" >Pesan Disini</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🍔</div>
+                <h2 class="service-title">Pesan Makanan</h2>
+                <p class="service-description">Nikmati berbagai pilihan makanan lezat diantar langsung ke rumah Anda.</p>
+                <a href="makan.html" >Pesan Disini</a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🏠</div>
+                <h2 class="service-title">Cari Rumah Kost</h2>
+                <p class="service-description">Temukan rumah kost yang sesuai dengan kebutuhan dan budget Anda.</p>
+                <a href="kost.html" >Pesan Disini</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+       const mysql = require('mysql2');
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'nama_database'
+});
+
+connection.connect(err => {
+  if (err) {
+    console.error('Koneksi gagal: ' + err.stack);
+    return;
+  }
+  console.log('Terhubung sebagai id ' + connection.threadId);
+});
+    </script>
+    </main>
+
+    <script>
+        // Fungsi untuk mengambil data dari API
+        async function ambilData(endpoint) {
+            try {
+                const response = await fetch(`https://api.contoh.com/${endpoint}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(`Error mengambil data ${endpoint}:`, error);
+                return [];
+            }
+        }
+
+        // Memperbarui kartu layanan dengan data yang diambil
+        async function perbaruiKartuLayanan() {
+            const pengemudi = await ambilData('pengemudi');
+            const warungMakan = await ambilData('warung-makan');
+            const rumahKost = await ambilData('rumah-kost');
+
+            // Di sini Anda perlu memperbarui kartu layanan dengan data yang diambil
+            // (Anda perlu memodifikasi struktur HTML untuk menampilkan data dinamis)
+        }
+
+        // Memanggil fungsi untuk memperbarui kartu layanan saat halaman dimuat
+        perbaruiKartuLayanan();
+    </script>
+</body>
+</html>
+
